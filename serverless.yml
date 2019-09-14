@@ -24,6 +24,13 @@ provider:
   name: aws
   region: us-east-2
   runtime: nodejs8.10
+  timeout: 30
+  environment:
+    PGUSER: postgres
+    PGPASSWORD: postgres # shall store it in ACM for security
+    PGHOST: mypostgresql.cnqskwlirkwq.ap-southeast-1.rds.amazonaws.com
+    PGDATABASE: postgres
+    PGPORT: 8080  
 
 # you can overwrite defaults here
 #  stage: dev
@@ -59,8 +66,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: lambda.handler
+  meters:
+    handler: lambda.handler_meters
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -74,6 +81,9 @@ functions:
               querystrings:
                 from: true
                 to: true
+  meterItem:
+    handler: lambda.handler_meterItem
+    events:
       - http:
           path: parking/meter/{id}
           method: get              
