@@ -22,7 +22,7 @@ service: parkservice
 
 provider:
   name: aws
-  region: us-east-2
+  region: ap-southeast-1
   runtime: nodejs8.10
   timeout: 30
   environment:
@@ -30,7 +30,23 @@ provider:
     PGPASSWORD: postgres # shall store it in ACM for security
     PGHOST: mypostgresql.cnqskwlirkwq.ap-southeast-1.rds.amazonaws.com
     PGDATABASE: postgres
-    PGPORT: 8080  
+    PGPORT: 8080
+  iamRoleStatements: # permissions for all of your functions can be set here
+    - Effect: Allow
+      Action: # Gives permission to VFC access
+        - ec2:CreateNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DeleteNetworkInterface
+        - ec2:DescribeSecurityGroups
+        - ec2:DescribeSubnets
+        - ec2:DescribeVpcs
+      Resource: '*'  
+  vpc:
+    securityGroupIds:
+      - sg-96f65beb
+    subnetIds:
+      - subnet-c8a84eae
+      - subnet-f676a4af   
 
 # you can overwrite defaults here
 #  stage: dev
